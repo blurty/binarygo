@@ -3,6 +3,11 @@
 // New nodes can be instantiated by using the node.New method.
 package node
 
+import (
+	"fmt"
+	"reflect"
+)
+
 // Node expresses the children (or leaves) of the binary search tree.
 // Each Node contains three properties, Node.left, Node.right and Node.value.
 // Node.left and Node.right can be nil during instantiation. Node.value must be assigned.
@@ -17,6 +22,30 @@ type Node struct {
 // TODO: Allow overloading and search from this data type?
 func New(value int) Node {
 	return Node{value: value}
+}
+
+// Search attempts to find a set value in the connected Nodes.
+func (parent *Node) Search(value int) (Node, bool) {
+	if parent.value == value {
+		return *parent, true
+	}
+	if parent.hasLeftNode() || parent.hasRightNode() {
+		return *parent, false
+	}
+}
+
+// Visit will automatically walk through the Child Nodes of the accessed Parent Node.
+// TODO: Allow for directional walking?
+func (parent *Node) Visit() Node {
+
+	fmt.Println(parent.value)
+
+	if parent.left != nil {
+		return parent.left.Visit()
+	} else if parent.right != nil {
+		return parent.right.Visit()
+	}
+	return *parent
 }
 
 // addLeftNode manages assigning a Left Child Node to the Parent Node.
@@ -45,15 +74,30 @@ func (parent *Node) addRightNode(child *Node) (Node, Node) {
 // Method returns the side the Child Node was assigned to.
 func (parent *Node) determineSide(child *Node) (Node, Node) {
 	if child.value < parent.value {
-		if parent.left == nil {
+		if parent.hasLeftNode() {
 			return parent.addLeftNode(child)
 		}
 		return parent.left.determineSide(child)
 	} else if child.value > parent.value {
-		if parent.right == nil {
+		if parent.hasRightNode() {
 			return parent.right.addRightNode(child)
 		}
 		return parent.right.determineSide(child)
 	}
 	return *child, *parent
+}
+
+// isNode checks whether the provided property is a Node.
+func (parent *Node) isNode(property interface{}) bool {
+	return reflect.TypeOf(property) == reflect.TypeOf(Node{})
+}
+
+// hasLeftSide tests whether the Parent Node has a Node assigned to its left side.
+func (parent *Node) hasLeftNode() bool {
+	return parent.isNode(parent.left)
+}
+
+// hasRightSide tests whether the Parent Node has a Node assigned to its right side.
+func (parent *Node) hasRightNode() bool {
+	return parent.isNode(parent.right)
 }
