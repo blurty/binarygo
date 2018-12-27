@@ -7,9 +7,16 @@ package node
 // Each Node contains three properties, Node.left, Node.right and Node.value.
 // Node.left and Node.right can be nil during instantiation. Node.value must be assigned.
 type Node struct {
-	left  *Node
-	right *Node
-	value int
+	left  *Node // Lower value Node.
+	right *Node // Greater value Node.
+	value int   // Sum of current Node.
+}
+
+// New instantiates a new Node struct.
+// Constructor expects the value to be an integer.
+// TODO: Allow overloading and search from this data type?
+func New(value int) Node {
+	return Node{value: value}
 }
 
 // addLeftNode manages assigning a Left Child Node to the Parent Node.
@@ -29,5 +36,24 @@ func (parent *Node) addRightNode(child *Node) (Node, Node) {
 	// assumes this has been correctly balanced from calling method.
 	parent.right = child
 	// @return (Node, Node)
+	return *child, *parent
+}
+
+// determineSide confirms what position the provided Child Node is to be assigned.
+// Operation works on checking whether the value of the Child Node is greater than the Parent Node.
+// Should the value be smaller, a left assignment operation is performed. If greater, the right assignment occurs.
+// Method returns the side the Child Node was assigned to.
+func (parent *Node) determineSide(child *Node) (Node, Node) {
+	if child.value < parent.value {
+		if parent.left == nil {
+			return parent.addLeftNode(child)
+		}
+		return parent.left.determineSide(child)
+	} else if child.value > parent.value {
+		if parent.right == nil {
+			return parent.right.addRightNode(child)
+		}
+		return parent.right.determineSide(child)
+	}
 	return *child, *parent
 }
