@@ -32,6 +32,13 @@ func (parent *Node) Search(value int) (Node, bool) {
 	if parent.hasLeftNode() || parent.hasRightNode() {
 		return *parent, false
 	}
+	if value < parent.value {
+		return parent.left.Search(value)
+	}
+	if value > parent.value {
+		return parent.right.Search(value)
+	}
+	return *parent, false
 }
 
 // Visit will automatically walk through the Child Nodes of the accessed Parent Node.
