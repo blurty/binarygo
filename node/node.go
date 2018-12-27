@@ -12,14 +12,22 @@ type Node struct {
 	value int
 }
 
-// addLeftNode manages binding a Left Child Node to the Parent Node.
+// addLeftNode manages assigning a Left Child Node to the Parent Node.
 // Left Child Nodes always contain a value that is smaller than the Parent Node and the Right Child Node.
-// Method returns the Child Node and its Parent Node.
+// Method returns the newly added Left Child Node and the associated Parent Node.
 func (parent *Node) addLeftNode(child *Node) (Node, Node) {
+	// assumes this has been correctly balanced from calling method.
 	parent.left = child
-
+	// @return (Node, Node)
 	return *child, *parent
 }
 
-// addRightNode manages binding a Right Child Node to the Parent Node.
+// addRightNode manages assigning a Right Child Node to the Parent Node.
 // Right Child Nodes always contain a value that is greater than the Parent Node and the Left Child Node.
+// Method returns the newly added Right Child Node and the associated Parent Node.
+func (parent *Node) addRightNode(child *Node) (Node, Node) {
+	// assumes this has been correctly balanced from calling method.
+	parent.right = child
+	// @return (Node, Node)
+	return *child, *parent
+}
