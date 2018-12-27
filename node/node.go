@@ -12,31 +12,31 @@ import (
 // Each Node contains three properties, Node.left, Node.right and Node.value.
 // Node.left and Node.right can be nil during instantiation. Node.value must be assigned.
 type Node struct {
-	left  *Node // Lower value Node.
-	right *Node // Greater value Node.
-	value int   // Sum of current Node.
+	Left  *Node // Lower value Node.
+	Right *Node // Greater value Node.
+	Value int   // Sum of current Node.
 }
 
 // New instantiates a new Node struct.
 // Constructor expects the value to be an integer.
 // TODO: Allow overloading and search from this data type?
 func New(value int) Node {
-	return Node{value: value}
+	return Node{Value: value}
 }
 
 // Search attempts to find a set value in the connected Nodes.
 func (parent *Node) Search(value int) (Node, bool) {
-	if parent.value == value {
+	if parent.Value == value {
 		return *parent, true
 	}
 	if parent.hasLeftNode() || parent.hasRightNode() {
 		return *parent, false
 	}
-	if value < parent.value {
-		return parent.left.Search(value)
+	if value < parent.Value {
+		return parent.Left.Search(value)
 	}
-	if value > parent.value {
-		return parent.right.Search(value)
+	if value > parent.Value {
+		return parent.Right.Search(value)
 	}
 	return *parent, false
 }
@@ -44,12 +44,12 @@ func (parent *Node) Search(value int) (Node, bool) {
 // Visit will automatically walk through the Child Nodes of the accessed Parent Node.
 func (parent *Node) Visit() Node {
 
-	fmt.Println(parent.value)
+	fmt.Println(parent.Value)
 
 	if parent.hasLeftNode() {
-		return parent.left.Visit()
+		return parent.Left.Visit()
 	} else if parent.hasRightNode() {
-		return parent.right.Visit()
+		return parent.Right.Visit()
 	}
 	return *parent
 }
@@ -59,7 +59,7 @@ func (parent *Node) Visit() Node {
 // Method returns the newly added Left Child Node and the associated Parent Node.
 func (parent *Node) addLeftNode(child *Node) (Node, Node) {
 	// assumes this has been correctly balanced from calling method.
-	parent.left = child
+	parent.Left = child
 	// @return (Node, Node)
 	return *child, *parent
 }
@@ -69,7 +69,7 @@ func (parent *Node) addLeftNode(child *Node) (Node, Node) {
 // Method returns the newly added Right Child Node and the associated Parent Node.
 func (parent *Node) addRightNode(child *Node) (Node, Node) {
 	// assumes this has been correctly balanced from calling method.
-	parent.right = child
+	parent.Right = child
 	// @return (Node, Node)
 	return *child, *parent
 }
@@ -79,16 +79,16 @@ func (parent *Node) addRightNode(child *Node) (Node, Node) {
 // Should the value be smaller, a left assignment operation is performed. If greater, the right assignment occurs.
 // Method returns the side the Child Node was assigned to.
 func (parent *Node) determineSide(child *Node) (Node, Node) {
-	if child.value < parent.value {
+	if child.Value < parent.Value {
 		if parent.hasLeftNode() {
 			return parent.addLeftNode(child)
 		}
-		return parent.left.determineSide(child)
-	} else if child.value > parent.value {
+		return parent.Left.determineSide(child)
+	} else if child.Value > parent.Value {
 		if parent.hasRightNode() {
-			return parent.right.addRightNode(child)
+			return parent.Right.addRightNode(child)
 		}
-		return parent.right.determineSide(child)
+		return parent.Right.determineSide(child)
 	}
 	return *child, *parent
 }
@@ -100,10 +100,10 @@ func (parent *Node) isNode(property interface{}) bool {
 
 // hasLeftSide tests whether the Parent Node has a Node assigned to its left side.
 func (parent *Node) hasLeftNode() bool {
-	return parent.isNode(parent.left)
+	return parent.isNode(parent.Left)
 }
 
 // hasRightSide tests whether the Parent Node has a Node assigned to its right side.
 func (parent *Node) hasRightNode() bool {
-	return parent.isNode(parent.right)
+	return parent.isNode(parent.Right)
 }
