@@ -1,14 +1,43 @@
 package node_test
 
-import "testing"
-import "reflect"
-import "github.com/gellel/binarygo/node"
+import (
+	"fmt"
+	"reflect"
+	"testing"
 
-func CreateNodeTest(t *testing.T) {
+	"github.com/gellel/binarygo/node"
+)
 
-	n := node.New(5)
+func create(value int) node.Node {
+	return node.New(value)
+}
 
-	if reflect.TypeOf(n) != reflect.TypeOf(node.Node{}) {
-		t.Fatalf("Cannot create new Node structs.")
+func isinstance(property interface{}) bool {
+	return reflect.TypeOf(property) == reflect.TypeOf(node.Node{})
+}
+
+func TestCreateNode(t *testing.T) {
+
+	fmt.Println("Running test 'CreateNode'.")
+
+	if isinstance(create(5)) == false {
+		t.Fatalf("Fatal. Cannot instantiate new Node.")
+	}
+}
+
+func TestCreateAndAccessValue(t *testing.T) {
+
+	fmt.Println("Running test 'CreateAndAccessValue'.")
+
+	n := create(5)
+
+	if isinstance(n) == false {
+		t.Fatalf("Fatal. Cannot instantiate new Node.")
+	}
+	if reflect.TypeOf(n.Value).Kind() != reflect.Int {
+		t.Fatalf("Fatal. Node.Value was assigned a non int type.")
+	}
+	if n.Value != 5 {
+		t.Errorf("Error. Node.Value should be '%d' but is '%d'.", 5, n.Value)
 	}
 }

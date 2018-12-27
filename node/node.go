@@ -24,6 +24,12 @@ func New(value int) Node {
 	return Node{Value: value}
 }
 
+// Add assigns a new Child Node to the Parent Node.
+func (parent *Node) Add(value int) (Node, Node) {
+	// @return child {Node}, parent{Node}
+	return parent.determineSide(&Node{Value: value})
+}
+
 // Search attempts to find a set value in the connected Nodes.
 func (parent *Node) Search(value int) (Node, bool) {
 	if parent.Value == value {
