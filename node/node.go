@@ -42,14 +42,13 @@ func (parent *Node) Search(value int) (Node, bool) {
 }
 
 // Visit will automatically walk through the Child Nodes of the accessed Parent Node.
-// TODO: Allow for directional walking?
 func (parent *Node) Visit() Node {
 
 	fmt.Println(parent.value)
 
-	if parent.left != nil {
+	if parent.hasLeftNode() {
 		return parent.left.Visit()
-	} else if parent.right != nil {
+	} else if parent.hasRightNode() {
 		return parent.right.Visit()
 	}
 	return *parent
