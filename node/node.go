@@ -19,7 +19,6 @@ type Node struct {
 
 // New instantiates a new Node struct.
 // Constructor expects the value to be an integer.
-// TODO: Allow overloading and search from this data type?
 func New(value int) Node {
 	return Node{Value: value}
 }
@@ -87,29 +86,30 @@ func (parent *Node) addRightNode(child *Node) (Node, Node) {
 func (parent *Node) determineSide(child *Node) (Node, Node) {
 	if child.Value < parent.Value {
 		if parent.hasLeftNode() {
-			return parent.addLeftNode(child)
+			return parent.Left.determineSide(child)
 		}
-		return parent.Left.determineSide(child)
+		return parent.addLeftNode(child)
+
 	} else if child.Value > parent.Value {
 		if parent.hasRightNode() {
-			return parent.Right.addRightNode(child)
+			return parent.Right.determineSide(child)
 		}
-		return parent.Right.determineSide(child)
+		return parent.addRightNode(child)
 	}
 	return *child, *parent
 }
 
 // isNode checks whether the provided property is a Node.
 func (parent *Node) isNode(property interface{}) bool {
-	return reflect.TypeOf(property) == reflect.TypeOf(Node{})
+	return reflect.TypeOf(property) == reflect.TypeOf((*Node)(nil))
 }
 
 // hasLeftSide tests whether the Parent Node has a Node assigned to its left side.
 func (parent *Node) hasLeftNode() bool {
-	return parent.isNode(parent.Left)
+	return parent.isNode(&parent.Left)
 }
 
 // hasRightSide tests whether the Parent Node has a Node assigned to its right side.
 func (parent *Node) hasRightNode() bool {
-	return parent.isNode(parent.Right)
+	return parent.isNode(&parent.Right)
 }

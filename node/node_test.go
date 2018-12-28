@@ -1,7 +1,6 @@
 package node_test
 
 import (
-	"fmt"
 	"reflect"
 	"testing"
 
@@ -13,31 +12,29 @@ func create(value int) node.Node {
 }
 
 func isinstance(property interface{}) bool {
-	return reflect.TypeOf(property) == reflect.TypeOf(node.Node{})
+	return reflect.TypeOf(property) == reflect.TypeOf((*node.Node)(nil))
 }
 
-func TestCreateNode(t *testing.T) {
+func Test(t *testing.T) {
 
-	fmt.Println("Running test 'CreateNode'.")
+	var n node.Node = create(2)
 
-	if isinstance(create(5)) == false {
-		t.Fatalf("Fatal. Cannot instantiate new Node.")
+	if !isinstance(&n) {
+		t.Fatalf("Fatal. Cannot create a Parent Node.")
 	}
-}
-
-func TestCreateAndAccessValue(t *testing.T) {
-
-	fmt.Println("Running test 'CreateAndAccessValue'.")
-
-	n := create(5)
-
-	if isinstance(n) == false {
-		t.Fatalf("Fatal. Cannot instantiate new Node.")
+	if !(reflect.TypeOf(n.Value).Kind() == reflect.Int) {
+		t.Fatalf("Fatal. Parent Node Value is not numeric.")
 	}
-	if reflect.TypeOf(n.Value).Kind() != reflect.Int {
-		t.Fatalf("Fatal. Node.Value was assigned a non int type.")
+
+	var left, _ node.Node = n.Add(1)
+
+	if !isinstance(&left) {
+		t.Fatalf("Fatal. Cannot assign Parent Node a Left Child Node.")
 	}
-	if n.Value != 5 {
-		t.Errorf("Error. Node.Value should be '%d' but is '%d'.", 5, n.Value)
+
+	var right, _ node.Node = n.Add(3)
+
+	if !isinstance(&right) {
+		t.Fatalf("Fatal. Cannot assign Parent a Right Child Node.")
 	}
 }
