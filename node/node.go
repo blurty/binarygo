@@ -47,16 +47,14 @@ func (parent *Node) Search(value int) (Node, bool) {
 }
 
 // Visit will automatically walk through the Child Nodes of the accessed Parent Node.
-func (parent *Node) Visit() Node {
-
-	fmt.Println(parent.Value)
-
+func (parent *Node) Visit() (Node, int) {
+	fmt.Println("Node value:", parent.Value)
 	if parent.hasLeftNode() {
 		return parent.Left.Visit()
 	} else if parent.hasRightNode() {
 		return parent.Right.Visit()
 	}
-	return *parent
+	return *parent, parent.Value
 }
 
 // addLeftNode manages assigning a Left Child Node to the Parent Node.
@@ -100,16 +98,19 @@ func (parent *Node) determineSide(child *Node) (Node, Node) {
 }
 
 // isNode checks whether the provided property is a Node.
-func (parent *Node) isNode(property interface{}) bool {
-	return reflect.TypeOf(property) == reflect.TypeOf((*Node)(nil))
+func (parent *Node) isNode(property interface{}, typeset interface{}) bool {
+
+	fmt.Println(reflect.TypeOf(property) == reflect.TypeOf(typeset))
+
+	return reflect.TypeOf(property) == reflect.TypeOf(typeset)
 }
 
 // hasLeftSide tests whether the Parent Node has a Node assigned to its left side.
 func (parent *Node) hasLeftNode() bool {
-	return parent.isNode(&parent.Left)
+	return parent.Left != nil //parent.isNode(parent.Left, (*Node)(nil))
 }
 
 // hasRightSide tests whether the Parent Node has a Node assigned to its right side.
 func (parent *Node) hasRightNode() bool {
-	return parent.isNode(&parent.Right)
+	return parent.Right != nil // parent.isNode(parent.Right, (*Node)(nil))
 }

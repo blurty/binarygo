@@ -1,6 +1,7 @@
 package node_test
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -37,4 +38,14 @@ func Test(t *testing.T) {
 	if !isinstance(&right) {
 		t.Fatalf("Fatal. Cannot assign Parent a Right Child Node.")
 	}
+
+	if left.Value > right.Value {
+		t.Fatalf("Fatal. Parent Node incorrectly balanced Child Node. Left Child Node is not a lower sum. Left '%d'. Right '%d'.", left.Value, right.Value)
+	}
+
+	_, v := n.Visit()
+
+	fmt.Println(v)
+
+	//if v == n.Left
 }
